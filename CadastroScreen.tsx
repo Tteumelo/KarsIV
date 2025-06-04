@@ -184,7 +184,10 @@ const styles = StyleSheet.create({
     fontSize: 16
   },
   clearButton: {
-    marginTop: 12,
+    borderWidth: 1,
+    borderColor: '#000',
+    borderRadius: 8,
+    marginTop: 5,
     paddingVertical: 10,
     alignItems: 'center'
   },

@@ -51,7 +51,7 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({ navigation,
     <View style={styles.container}>
       <Text style={styles.title}>Redefinir Senha</Text>
       <Text style={styles.subtitle}>
-        Informe o e-mail associado à sua conta para receber as instruções de redefinição de senha.
+        Informe o e-mail associado à sua conta para redefinição de senha.
       </Text>
       
       <AuthInput 

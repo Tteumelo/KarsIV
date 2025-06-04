@@ -68,16 +68,17 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation, route }) => {
         title="Criar Conta" 
         onPress={() => navigation.navigate('Cadastro')}
       />
-
-      <TouchableOpacity onPress={() => navigation.navigate('ForgotPassword')}>
-        <Text style={styles.forgotPassword}>Esqueceu a senha?</Text>
-      </TouchableOpacity>
-      
       <AuthButton 
         title={loading ? 'Carregando...' : 'Entrar'} 
         onPress={handleLogin}
         disabled={loading}
       />
+      <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+        <Text style={styles.backButtonText}>Voltar</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate('ForgotPassword')}>
+        <Text style={styles.forgotPassword}>Esqueceu a senha?</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -96,11 +97,20 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#6200ee',
   },
-  forgotPassword: {
+  backButton: {
+  marginTop: 20,
+  alignItems: 'center',
+},
+backButtonText: {
+  color: '#333',
+  fontSize: 16,
+  textDecorationLine: 'underline'
+},
+forgotPassword: {
     color: '#666',
     textAlign: 'right',
     marginBottom: 20,
-  },
+  }
 });
 
 export default LoginScreen;

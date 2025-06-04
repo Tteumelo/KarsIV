@@ -2,9 +2,11 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
 
 export type RootStackParamList = {
+  Welcome: undefined;
   Login: undefined;
   Cadastro: undefined;
   ForgotPassword: undefined;
+  CadastroVeiculo: undefined;
   CepError: { onRetry: () => void };
 };
 
