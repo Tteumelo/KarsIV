@@ -5,9 +5,20 @@ import {
   StyleSheet,
   ActivityIndicator,
   ScrollView,
+  TouchableOpacity
 } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import axios from 'axios';
+import { StackNavigationProp } from '@react-navigation/stack';
+
+
+type RootStackParamList = {
+  CadastroVeiculo: undefined;
+};
+
+type Props = {
+  navigation: StackNavigationProp<RootStackParamList, 'CadastroVeiculo'>;
+};
 
 type Marca = { nome: string; codigo: string };
 type Modelo = { nome: string; codigo: string };
@@ -21,7 +32,7 @@ type VeiculoInfo = {
   CodigoFipe: string;
 };
 
-export default function CadastroVeiculoScreen() {
+export default function CadastroVeiculoScreen({ navigation }: Props) {
   const [marcas, setMarcas] = useState<Marca[]>([]);
   const [modelos, setModelos] = useState<Modelo[]>([]);
   const [anos, setAnos] = useState<Ano[]>([]);
@@ -86,6 +97,13 @@ export default function CadastroVeiculoScreen() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
+      <TouchableOpacity 
+        style={styles.backButton} 
+        onPress={() => navigation.goBack()}
+      >
+        <Text style={styles.backButtonText}>← Voltar</Text>
+      </TouchableOpacity>
+
       <Text style={styles.title}>Cadastro de Veículo</Text>
 
       <Text style={styles.label}>Marca:</Text>
@@ -153,10 +171,12 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
+    textAlign: 'center',
   },
   label: {
     fontSize: 16,
     marginTop: 10,
+    fontWeight: 'bold',
   },
   result: {
     marginTop: 20,
@@ -168,5 +188,14 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 5,
   },
+  backButton: {
+    alignSelf: 'flex-start',
+    marginBottom: 10,
+    padding: 5,
+  },
+  backButtonText: {
+    fontSize: 16,
+    color: '#007AFF',
+    fontWeight: '500',
+  },
 });
-
