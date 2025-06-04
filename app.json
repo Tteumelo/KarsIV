@@ -1,0 +1,8 @@
+{
+  "expo": {
+    "entryPoint": "./App.tsx",
+    "android": {
+      "package": "com.anonymous.kars"
+    }
+  }
+}
