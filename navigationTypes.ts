@@ -1,12 +1,15 @@
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
+import { Car } from '../data/cars';
 
 export type RootStackParamList = {
-  Welcome: undefined;
+  Home: undefined;
   Login: undefined;
   Cadastro: undefined;
   ForgotPassword: undefined;
   CadastroVeiculo: undefined;
+  Usuario: undefined;
+  CarDetails: { car: Car };
   CepError: { onRetry: () => void };
 };
 
@@ -29,3 +32,4 @@ export type CepErrorScreenProps = {
   navigation: StackNavigationProp<RootStackParamList, 'CepError'>;
   route: RouteProp<RootStackParamList, 'CepError'>;
 };
+
