@@ -1,42 +1,83 @@
-# KarsIV - Sistema de Cadastro
+# KarsIV - App de Compra e Venda de Veículos
 
-## Funcionalidade de Persistência de Dados
+Aplicativo mobile desenvolvido em React Native com TypeScript, voltado para compra, venda e consulta de veículos, inspirado no estilo do app da Webmotors.
 
-### Descrição
-A tela de cadastro agora mantém os dados do usuário persistentes localmente, mesmo que o app seja fechado. Os seguintes dados são salvos automaticamente:
-- Nome completo
-- E-mail
-- CEP
-- Endereço completo
+## Tecnologias Utilizadas
 
-**Observação:** Por segurança, as senhas não são armazenadas localmente.
+- React Native
+- TypeScript
+- React Navigation
+- Firebase (Auth e Firestore)
+- API ViaCEP
+- API FIPE
+- Moti (animações)
 
-### Tecnologia de Persistência
-**AsyncStorage** (do pacote `@react-native-async-storage/async-storage`)
+## Funcionalidades
 
-**Justificativa da escolha:**
-- Solução oficial recomendada pela comunidade React Native
-- Compatível com iOS e Android
-- Armazenamento chave-valor simples e eficiente
-- Persistência garantida mesmo após fechar o app
-- Performance adequada para pequenos volumes de dados
+- Tela inicial com:
+  - Banner animado
+  - Acesso rápido para comprar, vender e financiar
+  - Lista de veículos com imagem, nome e botão de detalhes
+- Tela de login
+- Tela de cadastro com integração ao ViaCEP
+- Tela de detalhes do carro
+- Botão limpar formulário
+- Animações suaves com Framer Motion (Moti)
+- Estrutura pronta para integração com Firebase e Firestore
 
-### Como Testar
-1. Preencha os campos do formulário (exceto senhas)
-2. Feche o app completamente
-3. Reabra o app e navegue para a tela de cadastro
-4. Verifique se:
-   - Os campos preenchidos anteriormente estão mantidos
-   - O endereço correspondente ao CEP continua carregado
-   - As senhas estão vazias (como esperado por segurança)
+## Telas
 
-### Fluxo Esperado
-```mermaid
-sequenceDiagram
-    Usuário->>App: Preenche formulário
-    App->>AsyncStorage: Salva dados (exceto senhas)
-    Usuário->>App: Fecha aplicativo
-    Usuário->>App: Reabre aplicativo
-    App->>AsyncStorage: Recupera dados salvos
-    App->>Usuário: Exibe dados previamente preenchidos
+- `HomeScreen.tsx`: tela inicial com banner, menu e lista de veículos
+- `LoginScreen.tsx`: autenticação do usuário
+- `CadastroScreen.tsx`: registro com auto-preenchimento via CEP
+- `CarDetailsScreen.tsx`: detalhes de cada carro clicado
+- `UsuarioScreen.tsx`: perfil do usuário (em desenvolvimento)
+
+## Estrutura de Pastas
+
 ```
+src/
+├── assets/         # Imagens
+├── data/           # Dados mockados (ex: carros.ts)
+├── screens/        # Telas da aplicação
+├── types/          # Tipos de navegação
+```
+
+## Como rodar o projeto
+
+1. Clone o repositório:
+```bash
+git clone https://github.com/Tteumelo/KarsIV.git
+```
+
+2. Instale as dependências:
+```bash
+npm install
+```
+
+3. Execute o app:
+```bash
+npx expo start
+```
+
+Caso use imagens locais e Moti, instale as dependências:
+```bash
+npm install moti react-native-reanimated
+```
+
+## Status
+
+- Funcionalidades principais implementadas
+- Integração com Firebase e Firestore em progresso
+- Filtros por marca, tipo e valor planejados
+- Melhorias de UI/UX em andamento
+
+## Contato
+
+Desenvolvido por Matheus Melo e Gabriel Tolentino  
+Email: matheusmelo@gmail.com  
+GitHub: https://github.com/Tteumelo
+
+## Licença
+
+Este projeto está licenciado sob a MIT License.
