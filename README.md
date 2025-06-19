@@ -77,7 +77,3 @@ npm install moti react-native-reanimated
 Desenvolvido por Matheus Melo e Gabriel Tolentino  
 Email: matheusmelo@gmail.com  
 GitHub: https://github.com/Tteumelo
-
-## Licença
-
-Este projeto está licenciado sob a MIT License.
