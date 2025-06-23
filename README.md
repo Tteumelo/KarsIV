@@ -1,85 +1,143 @@
-# KarsIV
+# KarsIV - Aplicativo de Venda de Veículos
 
-**KarsIV** é um aplicativo mobile desenvolvido em **React Native com TypeScript** para compra e venda de veículos. Ele permite aos usuários realizar autenticação, cadastrar e visualizar veículos, além de integrar com serviços de consulta de preços e localização.
+Repositório do projeto completo em React Native, focado em venda de carros e motos, com funcionalidades inspiradas em plataformas como WebMotors.
 
-## Instruções de Instalação e Execução
+**Repositório GitHub:** [https://github.com/Tteumelo/KarsIV](https://github.com/Tteumelo/KarsIV)
 
-1. Clone o repositório:
+---
+
+## Código-Fonte
+
+### Estrutura do Projeto
+
+- **React Native + Expo SDK**
+- **Navegação**: Implementada com React Navigation (Stack Navigator)
+- **Gerenciamento de Estado**: Hooks (`useState`, `useEffect`) e Context API
+- **APIs externas integradas**:
+  - **ViaCEP**: busca de endereço via CEP
+  - **Tabela FIPE**: busca de preços de veículos
+- **Recursos Nativos**:
+  - Imagem de veículos com upload local
+  - Layout responsivo
+- **Organização modularizada**:
+  - `/screens`: telas da aplicação
+  - `/components`: componentes reutilizáveis
+  - `/services`: integração com APIs
+  - `/types`: definições TypeScript
+
+---
+
+## Testes
+
+### Estrutura de Testes
+
+- Testes unitários básicos em funções e hooks
+- Testes manuais de funcionalidades principais:
+  - Cadastro de usuário e veículo
+  - Busca de endereço e preço de veículo
+  - Navegação entre telas e persistência de dados
+
+### Problemas e Soluções
+
+- Erros de compilação corrigidos com alinhamento das versões de dependências
+- Conflitos de dependência resolvidos com `expo install`
+
+---
+
+## Manual de Uso
+
+### Instruções de Instalação
 
 ```bash
+# Clone o repositório
 git clone https://github.com/Tteumelo/KarsIV
 cd KarsIV
-```
 
-2. Instale as dependências:
-
-```bash
+# Instale as dependências
 npm install
-# ou
-yarn install
-```
 
-3. Execute o aplicativo:
-
-```bash
+# Rode no ambiente Expo
 npx expo start
 ```
 
-> É necessário ter o [Node.js](https://nodejs.org/), o [Expo CLI](https://docs.expo.dev/workflow/expo-cli/) e um emulador Android ou o aplicativo Expo Go.
+### Principais Funcionalidades
 
-## Funcionalidades Implementadas
+- Login e Cadastro de usuários
+- Cadastro de veículos com imagem
+- Tela inicial com listagem de carros (estilo WebMotors)
+- Tela de detalhes com informações e preços via FIPE
+- Navegação entre telas via menu
 
-- Tela de login com autenticação via Firebase
-- Tela de cadastro de usuário
-- Tela de recuperação de senha
-- Tela de cadastro de veículos com dados e imagens
-- Listagem de veículos na tela inicial
-- Detalhamento de veículo ao clicar no item
-- Integração com a API ViaCEP para busca de endereço por CEP
-- Integração com a API FIPE para consulta de preços de veículos
-- Interface baseada no estilo do WebMotors
+---
 
-## Dependências e Bibliotecas Utilizadas
+## Dependências Principais
 
-- React Native
-- TypeScript
-- Expo
-- React Navigation
-- Firebase Authentication
-- Axios
-- React Native Vector Icons
-- API ViaCEP
-- API FIPE
+- `react-native`
+- `expo`
+- `react-navigation`
+- `axios`
+- `firebase`
+- `@react-native-async-storage/async-storage`
 
-## Arquitetura da Aplicação e Organização do Código
+Use `npx expo install` para garantir versões compatíveis com o SDK atual.
 
-A arquitetura é baseada em organização por funcionalidades. O código está dividido em:
+---
 
-```
-src/
-├── assets/              # Imagens e recursos estáticos
-├── components/          # Componentes reutilizáveis
-├── screens/             # Telas principais (Login, Cadastro, Home, etc.)
-├── services/            # Serviços como Firebase, APIs externas
-├── types/               # Tipagens globais e interfaces
-├── navigation/          # Configuração das rotas
-└── utils/               # Funções auxiliares
+## Arquitetura e Estrutura do Código
+
+```bash
+KarsIV/
+├── App.tsx
+├── app.json
+├── package.json
+├── /src
+    ├── /screens
+    ├── /components
+    ├── /services
+    ├── /types
 ```
 
-O arquivo `App.tsx` é o ponto de entrada da aplicação. As rotas são configuradas usando `React Navigation`.
+- **App.tsx**: ponto de entrada
+- **app.json**: configurações Expo (sem `entryPoint`)
+- **src/**: organização por responsabilidade
 
-## Manual de Uso Básico
+### Fluxograma de Funcionamento
 
-1. **Login:** Informe seu e-mail e senha para acessar a aplicação.
-2. **Cadastro:** Acesse a opção de cadastro e preencha os dados do usuário.
-3. **Cadastro de Veículo:** Registre veículos com nome, descrição, valor, CEP, e imagem.
-4. **Listagem:** A tela inicial mostra os veículos cadastrados com opção de visualização detalhada.
-5. **Detalhes:** Clique em um veículo para visualizar informações detalhadas, incluindo o valor da Tabela FIPE.
-6. **API de CEP:** O endereço é preenchido automaticamente ao digitar o CEP no formulário.
-7. **Recuperar senha:** Permite redefinir a senha via Firebase.
+```mermaid
+flowchart TD
+    A[Início do App - App.tsx] --> B[Tela de Login]
+    B -->|Usuário novo| C[Tela de Cadastro de Usuário]
+    B -->|Usuário existente| D[Tela Inicial com Lista de Veículos]
+    C --> B
+    D --> E[Detalhes do Veículo]
+    D --> F[Cadastro de Novo Veículo]
+    E --> D
+    F --> D
+```
 
-## Observações
+---
 
-- O projeto está em fase de desenvolvimento. Novas funcionalidades e ajustes podem ser incluídos.
-- As APIs utilizadas são públicas e gratuitas.
-- O projeto utiliza o Expo SDK para facilitar testes em dispositivos físicos.
+## Relatório de Testes
+
+### Cenários Testados
+
+- Cadastro de usuário com e-mail inválido
+- Busca de CEP inexistente
+- Cadastro de veículo com campos obrigatórios vazios
+- Navegação entre login > cadastro > listagem > detalhes
+
+### Resultados Esperados x Obtidos
+
+- Mensagens de erro exibidas corretamente
+- Navegação fluida entre telas
+- Dados persistidos entre mudança de telas
+
+### Problemas Corrigidos
+
+- Erros de dependência com `react-native` e `expo`
+- Configuração de plugins `expo-root-project`
+
+---
+
+**Desenvolvido por:** Matheus de Melo e Gabriel Tolentino
+
