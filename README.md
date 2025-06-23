@@ -67,6 +67,8 @@ npx expo start
 - Tela inicial com listagem de carros (estilo WebMotors)
 - Tela de detalhes com informações e preços via FIPE
 - Navegação entre telas via menu
+- Animações básicas e navegação fluida
+- Busca de endereço com validação de CEP (ViaCEP)
 
 ---
 
@@ -76,7 +78,7 @@ npx expo start
 - `expo`
 - `react-navigation`
 - `axios`
-- `firebase` (versão atualizada, sem `getReactNativePersistence`)
+- `firebase` (versão atualizada)
 - `@react-native-async-storage/async-storage`
 
 Use `npx expo install` para garantir versões compatíveis com o SDK atual.
@@ -112,6 +114,10 @@ flowchart TD
     C --> B
     D --> E[Detalhes do Veículo]
     D --> F[Cadastro de Novo Veículo]
+    F --> G[Consulta de Preço via FIPE]
+    F --> H[Validação de Endereço via ViaCEP]
+    G --> D
+    H --> D
     E --> D
     F --> D
 ```
@@ -126,18 +132,21 @@ flowchart TD
 - Busca de CEP inexistente
 - Cadastro de veículo com campos obrigatórios vazios
 - Navegação entre login > cadastro > listagem > detalhes
+- Consulta de preço na FIPE com tipo e modelo não cadastrados
 
 ### Resultados Esperados x Obtidos
 
 - Mensagens de erro exibidas corretamente
 - Navegação fluida entre telas
 - Dados persistidos entre mudança de telas
+- Respostas apropriadas de API para erros comuns
 
 ### Problemas Corrigidos
 
 - Erros de dependência com `react-native` e `expo`
 - Configuração de plugins `expo-root-project`
 - Remoção de `getReactNativePersistence` e uso atualizado do Firebase
+- Correções na renderização da tela inicial e detalhes dos veículos
 
 ---
 
