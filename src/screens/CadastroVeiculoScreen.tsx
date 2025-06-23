@@ -5,12 +5,13 @@ import {
   StyleSheet,
   ActivityIndicator,
   ScrollView,
-  TouchableOpacity
+  TextInput,
+  FlatList,
+  TouchableOpacity,
+  Alert
 } from 'react-native';
-import { Picker } from '@react-native-picker/picker';
 import axios from 'axios';
 import { StackNavigationProp } from '@react-navigation/stack';
-
 
 type RootStackParamList = {
   CadastroVeiculo: undefined;
@@ -38,28 +39,38 @@ export default function CadastroVeiculoScreen({ navigation }: Props) {
   const [anos, setAnos] = useState<Ano[]>([]);
   const [veiculo, setVeiculo] = useState<VeiculoInfo | null>(null);
 
+  const [marcaInput, setMarcaInput] = useState('');
+  const [modeloInput, setModeloInput] = useState('');
+  const [anoInput, setAnoInput] = useState('');
+
   const [marcaSelecionada, setMarcaSelecionada] = useState('');
   const [modeloSelecionado, setModeloSelecionado] = useState('');
   const [anoSelecionado, setAnoSelecionado] = useState('');
 
+  const [sugestoesMarca, setSugestoesMarca] = useState<Marca[]>([]);
+  const [sugestoesModelo, setSugestoesModelo] = useState<Modelo[]>([]);
+  const [sugestoesAno, setSugestoesAno] = useState<Ano[]>([]);
+
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    axios
-      .get('https://parallelum.com.br/fipe/api/v1/carros/marcas')
-      .then((res) => setMarcas(res.data));
+    axios.get('https://parallelum.com.br/fipe/api/v1/carros/marcas')
+      .then(res => setMarcas(res.data));
   }, []);
 
   useEffect(() => {
     if (marcaSelecionada) {
       setLoading(true);
       axios
-        .get(
-          `https://parallelum.com.br/fipe/api/v1/carros/marcas/${marcaSelecionada}/modelos`
-        )
+        .get(`https://parallelum.com.br/fipe/api/v1/carros/marcas/${marcaSelecionada}/modelos`)
         .then((res) => {
-          setModelos(res.data.modelos);
+          const lista = res.data.modelos.sort((a: Modelo, b: Modelo) => a.nome.localeCompare(b.nome));
+          setModelos(lista);
+          setSugestoesModelo([]);
+          setModeloInput('');
+          setModeloSelecionado('');
           setAnos([]);
+          setAnoSelecionado('');
           setVeiculo(null);
           setLoading(false);
         });
@@ -67,14 +78,15 @@ export default function CadastroVeiculoScreen({ navigation }: Props) {
   }, [marcaSelecionada]);
 
   useEffect(() => {
-    if (marcaSelecionada && modeloSelecionado) {
+    if (modeloSelecionado) {
       setLoading(true);
       axios
-        .get(
-          `https://parallelum.com.br/fipe/api/v1/carros/marcas/${marcaSelecionada}/modelos/${modeloSelecionado}/anos`
-        )
+        .get(`https://parallelum.com.br/fipe/api/v1/carros/marcas/${marcaSelecionada}/modelos/${modeloSelecionado}/anos`)
         .then((res) => {
           setAnos(res.data);
+          setSugestoesAno([]);
+          setAnoInput('');
+          setAnoSelecionado('');
           setVeiculo(null);
           setLoading(false);
         });
@@ -82,12 +94,10 @@ export default function CadastroVeiculoScreen({ navigation }: Props) {
   }, [modeloSelecionado]);
 
   useEffect(() => {
-    if (marcaSelecionada && modeloSelecionado && anoSelecionado) {
+    if (anoSelecionado) {
       setLoading(true);
       axios
-        .get(
-          `https://parallelum.com.br/fipe/api/v1/carros/marcas/${marcaSelecionada}/modelos/${modeloSelecionado}/anos/${anoSelecionado}`
-        )
+        .get(`https://parallelum.com.br/fipe/api/v1/carros/marcas/${marcaSelecionada}/modelos/${modeloSelecionado}/anos/${anoSelecionado}`)
         .then((res) => {
           setVeiculo(res.data);
           setLoading(false);
@@ -95,68 +105,139 @@ export default function CadastroVeiculoScreen({ navigation }: Props) {
     }
   }, [anoSelecionado]);
 
+  const handleCadastro = () => {
+    if (!marcaSelecionada || !modeloSelecionado || !anoSelecionado || !veiculo) {
+      Alert.alert("Erro", "Por favor, selecione marca, modelo e ano corretamente.");
+      return;
+    }
+
+    Alert.alert("Sucesso", `Veículo ${veiculo.Modelo} cadastrado com sucesso!`);
+    console.log("Veículo cadastrado:", veiculo);
+  };
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <TouchableOpacity 
-        style={styles.backButton} 
-        onPress={() => navigation.goBack()}
-      >
+      <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
         <Text style={styles.backButtonText}>← Voltar</Text>
       </TouchableOpacity>
 
       <Text style={styles.title}>Cadastro de Veículo</Text>
 
       <Text style={styles.label}>Marca:</Text>
-      <Picker
-        selectedValue={marcaSelecionada}
-        onValueChange={(value) => setMarcaSelecionada(value)}
-      >
-        <Picker.Item label="Selecione a marca" value="" />
-        {marcas.map((m) => (
-          <Picker.Item key={m.codigo} label={m.nome} value={m.codigo} />
-        ))}
-      </Picker>
+      <TextInput
+        style={styles.input}
+        placeholder="Digite a marca"
+        value={marcaInput}
+        onChangeText={(text) => {
+          setMarcaInput(text);
+          setSugestoesMarca(marcas.filter(m => m.nome.toLowerCase().includes(text.toLowerCase())));
+        }}
+      />
+      {sugestoesMarca.length > 0 && !marcaSelecionada && (
+        <FlatList
+          data={sugestoesMarca}
+          keyExtractor={(item) => item.codigo}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              style={styles.suggestionItem}
+              onPress={() => {
+                setMarcaInput(item.nome);
+                setMarcaSelecionada(item.codigo);
+                setSugestoesMarca([]);
+              }}
+            >
+              <Text>{item.nome}</Text>
+            </TouchableOpacity>
+          )}
+          style={styles.suggestionList}
+        />
+      )}
 
-      {modelos.length > 0 && (
+      {marcaSelecionada && (
         <>
           <Text style={styles.label}>Modelo:</Text>
-          <Picker
-            selectedValue={modeloSelecionado}
-            onValueChange={(value) => setModeloSelecionado(value)}
-          >
-            <Picker.Item label="Selecione o modelo" value="" />
-            {modelos.map((m) => (
-              <Picker.Item key={m.codigo} label={m.nome} value={m.codigo} />
-            ))}
-          </Picker>
+          <TextInput
+            style={styles.input}
+            placeholder="Digite o modelo"
+            value={modeloInput}
+            onChangeText={(text) => {
+              setModeloInput(text);
+              setSugestoesModelo(modelos.filter(m => m.nome.toLowerCase().includes(text.toLowerCase())));
+            }}
+          />
+          {sugestoesModelo.length > 0 && !modeloSelecionado && (
+            <FlatList
+              data={sugestoesModelo}
+              keyExtractor={(item) => item.codigo}
+              renderItem={({ item }) => (
+                <TouchableOpacity
+                  style={styles.suggestionItem}
+                  onPress={() => {
+                    setModeloInput(item.nome);
+                    setModeloSelecionado(item.codigo);
+                    setSugestoesModelo([]);
+                  }}
+                >
+                  <Text>{item.nome}</Text>
+                </TouchableOpacity>
+              )}
+              style={styles.suggestionList}
+            />
+          )}
         </>
       )}
 
-      {anos.length > 0 && (
+      {modeloSelecionado && (
         <>
           <Text style={styles.label}>Ano:</Text>
-          <Picker
-            selectedValue={anoSelecionado}
-            onValueChange={(value) => setAnoSelecionado(value)}
-          >
-            <Picker.Item label="Selecione o ano" value="" />
-            {anos.map((a) => (
-              <Picker.Item key={a.codigo} label={a.nome} value={a.codigo} />
-            ))}
-          </Picker>
+          <TextInput
+            style={styles.input}
+            placeholder="Digite o ano"
+            value={anoInput}
+            onChangeText={(text) => {
+              setAnoInput(text);
+              setSugestoesAno(anos.filter(a => a.nome.toLowerCase().includes(text.toLowerCase())));
+            }}
+          />
+          {sugestoesAno.length > 0 && !anoSelecionado && (
+            <FlatList
+              data={sugestoesAno}
+              keyExtractor={(item) => item.codigo}
+              renderItem={({ item }) => (
+                <TouchableOpacity
+                  style={styles.suggestionItem}
+                  onPress={() => {
+                    setAnoInput(item.nome);
+                    setAnoSelecionado(item.codigo);
+                    setSugestoesAno([]);
+                  }}
+                >
+                  <Text>{item.nome}</Text>
+                </TouchableOpacity>
+              )}
+              style={styles.suggestionList}
+            />
+          )}
         </>
       )}
 
-      {loading && <ActivityIndicator size="large" color="#000" />}
+      {loading && <ActivityIndicator size="large" color="#6C00FF" style={{ marginTop: 20 }} />}
 
       {veiculo && (
         <View style={styles.result}>
+          <Text style={styles.resultTitle}>Informações do Veículo:</Text>
           <Text style={styles.resultText}>Marca: {veiculo.Marca}</Text>
           <Text style={styles.resultText}>Modelo: {veiculo.Modelo}</Text>
           <Text style={styles.resultText}>Ano: {veiculo.AnoModelo}</Text>
           <Text style={styles.resultText}>Combustível: {veiculo.Combustivel}</Text>
           <Text style={styles.resultText}>Valor FIPE: {veiculo.Valor}</Text>
         </View>
+      )}
+
+      {veiculo && (
+        <TouchableOpacity style={styles.cadastrarBtn} onPress={handleCadastro}>
+          <Text style={styles.cadastrarText}>Cadastrar Veículo</Text>
+        </TouchableOpacity>
       )}
     </ScrollView>
   );
@@ -178,11 +259,36 @@ const styles = StyleSheet.create({
     marginTop: 10,
     fontWeight: 'bold',
   },
+  input: {
+    borderWidth: 1,
+    borderColor: '#CCC',
+    borderRadius: 8,
+    padding: 10,
+    marginBottom: 5,
+  },
+  suggestionList: {
+    maxHeight: 150,
+    borderWidth: 1,
+    borderColor: '#EEE',
+    borderRadius: 8,
+    marginBottom: 10,
+  },
+  suggestionItem: {
+    padding: 10,
+    borderBottomWidth: 1,
+    borderColor: '#EEE',
+    backgroundColor: '#F9F9F9',
+  },
   result: {
     marginTop: 20,
     padding: 15,
     backgroundColor: '#f0f0f0',
     borderRadius: 10,
+  },
+  resultTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
   },
   resultText: {
     fontSize: 16,
@@ -198,4 +304,16 @@ const styles = StyleSheet.create({
     color: '#007AFF',
     fontWeight: '500',
   },
+  cadastrarBtn: {
+    marginTop: 20,
+    backgroundColor: '#6C00FF',
+    paddingVertical: 14,
+    borderRadius: 10,
+    alignItems: 'center'
+  },
+  cadastrarText: {
+    color: '#FFF',
+    fontSize: 16,
+    fontWeight: 'bold'
+  }
 });

@@ -11,6 +11,8 @@ import {
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../types/navigationTypes'; 
 import { useNavigation } from '@react-navigation/native';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../config/firebase';
 
 type CadastroScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Cadastro'>;
 
@@ -26,24 +28,30 @@ const CadastroScreen: React.FC = () => {
     endereco: ''
   });
 
-  const handleCadastro = () => {
-    if (
-      !formData.nome ||
-      !formData.email ||
-      !formData.senha ||
-      !formData.confirmarSenha
-    ) {
+  const handleCadastro = async () => {
+    const { nome, email, senha, confirmarSenha } = formData;
+
+    if (!nome || !email || !senha || !confirmarSenha) {
       Alert.alert('Erro', 'Preencha todos os campos obrigatórios.');
       return;
     }
 
-    if (formData.senha !== formData.confirmarSenha) {
+    if (senha !== confirmarSenha) {
       Alert.alert('Erro', 'As senhas não coincidem.');
       return;
     }
 
-    // Aqui você integraria com backend ou Firebase
-    Alert.alert('Sucesso', 'Cadastro realizado com sucesso!');
+    try {
+      await createUserWithEmailAndPassword(auth, email, senha);
+      Alert.alert('Sucesso', 'Cadastro realizado com sucesso!');
+      navigation.navigate('Login');
+    } catch (error: any) {
+      let message = 'Erro ao cadastrar usuário.';
+      if (error.code === 'auth/email-already-in-use') {
+        message = 'E-mail já está em uso.';
+      }
+      Alert.alert('Erro', message);
+    }
   };
 
   const handleLimparCampos = () => {
@@ -112,18 +120,18 @@ const CadastroScreen: React.FC = () => {
         onChangeText={(text) => setFormData({ ...formData, confirmarSenha: text })}
       />
       <TextInput
-        placeholder="CEP"
-        style={styles.input}
-        keyboardType="numeric"
-        value={formData.cep}
-        onChangeText={(text) => {
-          const cleanedCep = text.replace(/\D/g, '');
-          setFormData({ ...formData, cep: cleanedCep });
+          placeholder="CEP"
+          style={styles.input}
+          keyboardType="numeric"
+          value={formData.cep}
+          onChangeText={(text) => {
+            const cleanedCep = text.replace(/\D/g, '');
+            setFormData({ ...formData, cep: cleanedCep });
 
-          if (cleanedCep.length === 8) {
-            buscarEnderecoPorCEP(cleanedCep);
+            if (cleanedCep.length === 8) {
+              buscarEnderecoPorCEP(cleanedCep);
           }
-        }}
+      }}
       />
       <TextInput
         placeholder="Endereço"
@@ -143,7 +151,7 @@ const CadastroScreen: React.FC = () => {
       <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
         <Text style={styles.backButtonText}>Voltar</Text>
       </TouchableOpacity>
-
+      
     </ScrollView>
   );
 };
@@ -197,14 +205,12 @@ const styles = StyleSheet.create({
     fontSize: 16
   },
   backButton: {
-  marginTop: 20,
-  alignItems: 'center',
-},
-
-backButtonText: {
-  color: '#333',
-  fontSize: 16,
-  textDecorationLine: 'underline'
-}
-
+    marginTop: 20,
+    alignItems: 'center',
+  },
+  backButtonText: {
+    color: '#333',
+    fontSize: 16,
+    textDecorationLine: 'underline'
+  }
 });

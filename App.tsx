@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { RootStackParamList } from './src/types/navigationTypes';
@@ -10,9 +10,26 @@ import CadastroVeiculoScreen from '@screens/CadastroVeiculoScreen';
 import HomeScreen from './src/screens/HomeScreen';
 import CarDetailsScreen from './src/screens/CarDetailsScreen';
 
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from 'src/config/firebase';
+
 const Stack = createStackNavigator<RootStackParamList>();
 
 function App() {
+  const [authReady, setAuthReady] = useState(false);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, () => {
+      setAuthReady(true);
+    });
+
+    return unsubscribe;
+  }, []);
+
+  if (!authReady) {
+    return null;
+  }
+
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Home" screenOptions={{ headerShown: false }}>

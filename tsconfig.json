@@ -7,16 +7,14 @@
     "noEmit": true,
     "baseUrl": ".",
     "paths": {
-      "@components/*": [
-        "src/components/*"
-      ],
-      "@screens/*": [
-        "./src/screens/*"
-      ],
-      "@types/*": [
-        "./src/types/*"
-      ]
-    }
+      "@components/*": ["src/components/*"],
+      "@screens/*": ["src/screens/*"],
+      "@types/*": ["src/types/*"]
+    },
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true
   },
   "extends": "expo/tsconfig.base"
 }
