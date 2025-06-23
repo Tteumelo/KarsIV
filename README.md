@@ -150,5 +150,9 @@ flowchart TD
 
 ---
 
-**Desenvolvido por:** Matheus de Melo e Gabriel Tolentino
+**Desenvolvido por:** 
+-Matheus de Melo e Gabriel Tolentino
+###Contato
+-E-mail:matheus1998-1@hotmail.com  
+-E-mail:gabrieltolentino.r@gmail.com
 
