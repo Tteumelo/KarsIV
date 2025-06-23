@@ -1,6 +1,6 @@
 # KarsIV - Aplicativo de Venda de Veículos
 
-Repositório do projeto completo em React Native, focado em venda de carros e motos, com funcionalidades inspiradas em plataformas como WebMotors.
+Repositório do projeto completo em React Native, focado em venda de carros e motos.
 
 **Repositório GitHub:** [https://github.com/Tteumelo/KarsIV](https://github.com/Tteumelo/KarsIV)
 
@@ -64,7 +64,7 @@ npx expo start
 
 - Login e Cadastro de usuários
 - Cadastro de veículos com imagem
-- Tela inicial com listagem de carros (estilo WebMotors)
+- Tela inicial com listagem de carros 
 - Tela de detalhes com informações e preços via FIPE
 - Navegação entre telas via menu
 - Animações básicas e navegação fluida
@@ -149,10 +149,8 @@ flowchart TD
 - Correções na renderização da tela inicial e detalhes dos veículos
 
 ---
-**Desenvolvido por:** 
--Matheus de Melo e Gabriel Tolentino
 
-**Contato**
--E-mail:matheus1998-1@hotmail.com  
--E-mail:gabrieltolentino.r@gmail.com
+**Desenvolvido por:** Matheus de Melo e Gabriel Tolentino\
+**E-mail:** [matheus1998-1@hotmail.com](mailto\:matheus1998-1@hotmail.com)\
+**E-mail:** [gabrieltolentino.r@gmail.com](mailto\:gabrieltolentino.r@gmail.com)
 
