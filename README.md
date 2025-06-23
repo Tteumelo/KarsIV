@@ -76,7 +76,7 @@ npx expo start
 - `expo`
 - `react-navigation`
 - `axios`
-- `firebase`
+- `firebase` (versão atualizada, sem `getReactNativePersistence`)
 - `@react-native-async-storage/async-storage`
 
 Use `npx expo install` para garantir versões compatíveis com o SDK atual.
@@ -95,6 +95,7 @@ KarsIV/
     ├── /components
     ├── /services
     ├── /types
+    ├── /config
 ```
 
 - **App.tsx**: ponto de entrada
@@ -136,6 +137,7 @@ flowchart TD
 
 - Erros de dependência com `react-native` e `expo`
 - Configuração de plugins `expo-root-project`
+- Remoção de `getReactNativePersistence` e uso atualizado do Firebase
 
 ---
 
